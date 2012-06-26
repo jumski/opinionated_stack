@@ -10,3 +10,9 @@
 [submodule "cookbooks/mysql"]
 	path = cookbooks/mysql
 	url = git://github.com/opscode-cookbooks/mysql.git
+[submodule "cookbooks/users"]
+	path = cookbooks/users
+	url = git://github.com/opscode-cookbooks/users.git
+[submodule "cookbooks/nginx"]
+	path = cookbooks/nginx
+	url = git://github.com/opscode-cookbooks/nginx.git
