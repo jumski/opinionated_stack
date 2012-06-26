@@ -16,25 +16,25 @@ end
 
 connection_info = {:host => "localhost", :username => 'root', :password => node['mysql']['server_root_password']}
 
-node['applications'].each do |cfg|
+node['applications'].each do |app|
 
-  user cfg[:username] do
+  user app[:username] do
     gid "deploy"
-    home "/home/#{cfg[:username]}"
+    home "/home/#{app[:username]}"
     shell "/bin/bash"
-    password %x[ openssl passwd -1 #{cfg[:password]} ].chomp!
+    password %x[ openssl passwd -1 #{app[:password]} ].chomp!
     supports({:manage_home => true})
   end
 
-  mysql_database cfg[:db_name] do
+  mysql_database app[:db_name] do
     connection connection_info
     action :create
   end
 
-  mysql_database_user cfg[:db_username] do
+  mysql_database_user app[:db_username] do
     connection connection_info
-    password cfg[:db_password]
-    database_name cfg[:db_name]
+    password app[:db_password]
+    database_name app[:db_name]
     host '%'
     privileges [:select, :update, :insert, :create, :drop]
     action :grant
