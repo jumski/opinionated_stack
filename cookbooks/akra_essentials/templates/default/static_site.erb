@@ -1,0 +1,18 @@
+
+upstream <%= @app_name %>_upstream {
+  server unix:/data/github/current/tmp/sockets/unicorn.sock;
+}
+
+server {
+  listen 80;
+  server_name <%= @domain_name %> www.<%= @domain_name %>;
+
+  root /home/deploy/wye2.dev.akra.net;
+  index index.html;
+
+  rails_env production;
+
+  passenger_enabled on;
+  passenger_min_instances 1;
+}
+
