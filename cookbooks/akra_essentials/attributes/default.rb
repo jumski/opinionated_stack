@@ -1,4 +1,11 @@
 
+# packages
+default['akra_essentials']['packages'] = %w{
+  libshadow-ruby1.8
+  imagemagick
+  libmagickcore-dev
+}
+
 # create basic app values based on app name
 %w(akra_polska epics).each do |name|
   default['akra_essentials']['apps'][name] = {
@@ -23,8 +30,3 @@ end
 mysql["server_root_password"]   = "akrapolskalubimysql"
 mysql["server_repl_password"]   = "akrapolskalubimysql"
 mysql["server_debian_password"] = "akrapolskalubimysql"
-
-# redisio
-# redisio[""]   = "akrapolskalubimysql"
-# redisio["server_repl_password"]   = "akrapolskalubimysql"
-# redisio["server_debian_password"] = "akrapolskalubimysql"

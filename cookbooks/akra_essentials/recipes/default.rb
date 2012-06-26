@@ -6,7 +6,9 @@ include_recipe "nginx::default"
 include_recipe "redisio::install"
 include_recipe "redisio::enable"
 
-package "libshadow-ruby1.8"
+node[:akra_essentials][:packages].each do |name|
+  package name
+end
 
 group "deploy" do
   gid 2001
@@ -20,8 +22,12 @@ end
 ###########################################
 ############# APPLICATIONS ################
 ###########################################
-connection_info = {:host => "localhost", :username => 'root', :password => node['mysql']['server_root_password']}
-node['akra_essentials']['apps'].each do |name, app|
+connection_info = {
+  :host     => "localhost",
+  :username => 'root',
+  :password => node[:mysql][:server_root_password]
+}
+node[:akra_essentials][:apps].each do |name, app|
 
   # unix user
   user app[:username] do
