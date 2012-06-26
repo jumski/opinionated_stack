@@ -20,6 +20,11 @@ directory "/etc/supervisor.d" do
   mode "770"
 end
 
+rvm_wrapper default[:akra_essentials][:bundle_wrapper_prefix] do
+  ruby_string "default@global"
+  binary "bundle"
+end
+
 ###########################################
 ############# APPLICATIONS ################
 ###########################################
@@ -60,11 +65,32 @@ node[:akra_essentials][:apps].each do |name, app|
     owner "root"
     group "root"
     variables(
-      :domains => app[:domains].map{|d| [d, "www.#{d}"]}.flatten,
-      :name    => name,
-      :socket_path => "#{app[:home_dir]}/current/tmp/unicorn.sock",
+      :domains     => app[:domains].map{|d| [d, "www.#{d}"]}.flatten,
+      :name        => name,
+      :socket_path => app[:unicorn_socket_path],
       :root        => "#{app[:home_dir]}/current"
     )
+  end
+
+  # nginx site config
+  template app[:unicorn_config_path] do
+    source "unicorn_rails_config.erb"
+    mode 700
+    owner app[:username]
+    group 'deploy'
+    variables(
+      :username         => app[:username],
+      :group            => app[:group],
+      :worker_processes => app[:unicorn_worker_processes],
+      :root             => "#{app[:home_dir]}/current"
+    )
+  end
+
+  supervisor_service "#{name}_unicorn" do
+    action :enable
+    autostart true
+    user "deploy"
+    command ""
   end
 
 end
