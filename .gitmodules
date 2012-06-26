@@ -25,3 +25,6 @@
 [submodule "cookbooks/redisio"]
 	path = cookbooks/redisio
 	url = git://github.com/brianbianco/redisio.git
+[submodule "cookbooks/rvm"]
+	path = cookbooks/rvm
+	url = git://github.com/fnichol/chef-rvm.git

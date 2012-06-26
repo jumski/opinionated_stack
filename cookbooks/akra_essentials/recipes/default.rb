@@ -5,6 +5,7 @@ include_recipe "supervisor"
 include_recipe "nginx::default"
 include_recipe "redisio::install"
 include_recipe "redisio::enable"
+include_recipe "rvm::system"
 
 node[:akra_essentials][:packages].each do |name|
   package name
