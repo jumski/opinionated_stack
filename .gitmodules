@@ -22,3 +22,6 @@
 [submodule "cookbooks/ohai"]
 	path = cookbooks/ohai
 	url = git://github.com/opscode-cookbooks/ohai
+[submodule "cookbooks/redisio"]
+	path = cookbooks/redisio
+	url = git://github.com/brianbianco/redisio.git
