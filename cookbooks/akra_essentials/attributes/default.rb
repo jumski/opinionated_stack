@@ -1,7 +1,7 @@
 
 applications = %w(akra_polska epics)
 
-default['applications'] = applications.map do |name|
+default['akra_essentials']['apps'] = applications.map do |name|
   {
     :username    => name,
     :password    => "#{name}_deploy_password",

@@ -16,7 +16,7 @@ end
 
 connection_info = {:host => "localhost", :username => 'root', :password => node['mysql']['server_root_password']}
 
-node['applications'].each do |app|
+node['akra_essentials']['apps'].each do |app|
 
   user app[:username] do
     gid "deploy"
