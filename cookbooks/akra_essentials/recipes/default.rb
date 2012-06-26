@@ -1,13 +1,8 @@
 
-# include_recipe "mysql"
+include_recipe "mysql::server"
 include_recipe "supervisor"
 
-group "deploy" do
-  gid 2001
-end
-
 package "libshadow-ruby1.8"
-
 user "deploy" do
   comment "Random User"
   uid 2001
@@ -18,6 +13,12 @@ user "deploy" do
   supports({:manage_home => true})
 end
 
-# mysql["server_root_password"]   = "akrapolskalubimysql"
-# mysql["server_repl_password"]   = "akrapolskalubimysql"
-# mysql["server_debian_password"] = "akrapolskalubimysql"
+group "deploy" do
+  gid 2001
+end
+
+directory "/etc/supervisor.d" do
+  group "deploy"
+  mode "770"
+end
+
