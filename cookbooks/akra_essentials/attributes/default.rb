@@ -11,7 +11,7 @@ default[:akra_essentials].tap do |akra|
   akra[:rvm_wrapper_prefix] = 'sys'
 
 
-  akra['apps'] = %w(akra_polska epics).map do |name|
+  akra[:apps] = %w(akra_polska epics).map do |name|
     {
       :name => name,
       :home_dir => home_dir = "/home/#{name}",
@@ -21,10 +21,19 @@ default[:akra_essentials].tap do |akra|
       :db_name => name,
       :db_password => "#{name}_mysql_password",
       :domains => [],
-      :unicorn_config_path => "#{home_dir}/shared/config/unicorn.rb",
+      :unicorn_config_path => "#{home_dir}/unicorn_config.rb",
       :unicorn_socket_path => "#{home_dir}/current/tmp/unicorn.sock",
       :unicorn_worker_processes => 1,
     }
+  end
+
+  akra[:apps].find{|app| app[:name] == 'akra_polska'}.tap do |akra_polska|
+    akra_polska[:domains] = %w(akra.net)
+  end
+
+  akra[:apps].find{|app| app[:name] == 'epics'}.tap do |epics|
+    epics[:domains] = %w(epics.pl)
+    epics[:unicorn_worker_processes] = 6
   end
 
 end
@@ -34,16 +43,6 @@ end
 # akra['rvm_wrapper_path_prefix'] = 'hax'
 # akra['unicorn_bin_path'] = 'hax'
 
-#   # create basic app values based on app name
-
-# raise akra['apps']['epics']['name'].inspect
-#
-# # overrides
-# akra['apps'].tap do |apps|
-#   apps['akra_polska']['domains'] = %w(akra.net)
-#   apps['epics']['domains']       = %w(epics.pl)
-#   apps['epics']['unicorn_worker_processes'] = 6
-# end
 
 # mysql passwords
 mysql["server_root_password"]   = "akrapolskalubimysql"
