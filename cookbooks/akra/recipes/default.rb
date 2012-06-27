@@ -9,11 +9,7 @@ include_recipe "rvm::system"
 
 akra = node[:akra]
 
-akra[:packages].each do |name|
-  puts '----------------'
-  puts name.inspect
-  package name
-end
+akra[:packages].each { |name| package name }
 
 group "deploy" do
   gid 2001
@@ -48,8 +44,6 @@ akra[:apps].each do |app|
   app[:db_name]     = app[:db_name] || app[:name]
   app[:db_password] = app[:db_password] || "#{app[:name]}_mysql_password"
   app[:unicorn_worker_processes] = app[:unicorn_worker_processes] || 1
-  app[:unicorn_config_path] = app[:unicorn_config_path] ||
-                              "#{app[:home_dir]}/unicorn_config.rb"
   app[:unicorn_socket_path] = app[:unicorn_socket_path] ||
                               "#{app[:home_dir]}/current/tmp/unicorn.sock"
 
@@ -90,8 +84,18 @@ akra[:apps].each do |app|
     )
   end
 
+  %w(current shared/log shared/config).each do |path|
+    directory "#{app[:home_dir]}/#{path}" do
+      owner app[:username]
+      group "deploy"
+      mode "770"
+      recursive true
+    end
+  end
+
   # nginx site config
-  template app[:unicorn_config_path] do
+  unicorn_config_path = "#{app[:home_dir]}/shared/config/unicorn_config.rb"
+  template unicorn_config_path do
     source "unicorn_rails_config.erb"
     mode 700
     owner app[:username]
@@ -106,17 +110,22 @@ akra[:apps].each do |app|
     )
   end
 
-  %w(current shared shared/log).each do |path|
-    directory "#{app[:home_dir]}/#{path}" do
-      owner app[:username]
-      group "deploy"
-      mode "770"
-    end
+  # nginx site config
+  template "#{app[:home_dir]}/shared/config/database.yml" do
+    source "database.yml.erb"
+    mode 700
+    owner app[:username]
+    group 'deploy'
+    variables(
+      :database => app[:db_name],
+      :user     => app[:db_username],
+      :password => app[:db_password]
+    )
   end
 
   supervisor_service "#{app[:name]}_unicorn" do
     action :enable
-    command "#{akra[:unicorn_bin_path]} -c #{app[:unicorn_config_path]} -E production"
+    command "#{akra[:unicorn_bin_path]} -c #{unicorn_config_path} -E production"
 
     autostart false
     autorestart false
