@@ -39,6 +39,19 @@ connection_info = {
 }
 
 akra[:apps].each do |app|
+  # override defaults for app with provided attributes
+  app[:home_dir]    = app[:home_dir] || "/home/#{app[:name]}"
+  app[:username]    = app[:username] || app[:name]
+  app[:group]       = app[:group] || 'deploy'
+  app[:password]    = app[:password] || "#{app[:name]}_deploy_password"
+  app[:db_username] = app[:db_username] || app[:name]
+  app[:db_name]     = app[:db_name] || app[:name]
+  app[:db_password] = app[:db_password] || "#{app[:name]}_mysql_password"
+  app[:unicorn_worker_processes] = app[:unicorn_worker_processes] || 1
+  app[:unicorn_config_path] = app[:unicorn_config_path] ||
+                              "#{app[:home_dir]}/unicorn_config.rb"
+  app[:unicorn_socket_path] = app[:unicorn_socket_path] ||
+                              "#{app[:home_dir]}/current/tmp/unicorn.sock"
 
   # unix user
   user app[:username] do
