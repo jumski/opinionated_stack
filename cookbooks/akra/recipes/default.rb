@@ -7,7 +7,7 @@ include_recipe "redisio::install"
 include_recipe "redisio::enable"
 include_recipe "rvm::system"
 
-akra = node[:akra_essentials]
+akra = node[:akra]
 
 akra[:packages].each do |name|
   puts '----------------'
