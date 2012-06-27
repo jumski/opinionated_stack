@@ -17,12 +17,12 @@ end
 
 directory "/etc/supervisor.d" do
   group "deploy"
-  mode "770"
+  mode "0770"
 end
 
 rvm_wrapper akra[:rvm_wrapper_prefix] do
   ruby_string "default@global"
-  binary "unicorn_rails"
+  binary "bundle"
 end
 
 ###########################################
@@ -73,7 +73,7 @@ akra[:apps].each do |app|
   # nginx site config
   template "/etc/nginx/sites-available/#{app[:name]}" do
     source "rails_site.erb"
-    mode 700
+    mode '0700'
     owner "root"
     group "root"
     variables(
@@ -84,11 +84,11 @@ akra[:apps].each do |app|
     )
   end
 
-  %w(current shared/log shared/config).each do |path|
+  %w(shared shared/log shared/config).each do |path|
     directory "#{app[:home_dir]}/#{path}" do
       owner app[:username]
       group "deploy"
-      mode "770"
+      mode "0750"
       recursive true
     end
   end
@@ -97,7 +97,7 @@ akra[:apps].each do |app|
   unicorn_config_path = "#{app[:home_dir]}/shared/config/unicorn_config.rb"
   template unicorn_config_path do
     source "unicorn_rails_config.erb"
-    mode 700
+    mode '0750'
     owner app[:username]
     group 'deploy'
     variables(
@@ -113,7 +113,7 @@ akra[:apps].each do |app|
   # nginx site config
   template "#{app[:home_dir]}/shared/config/database.yml" do
     source "database.yml.erb"
-    mode 700
+    mode '0750'
     owner app[:username]
     group 'deploy'
     variables(
@@ -123,13 +123,14 @@ akra[:apps].each do |app|
     )
   end
 
+  unicorn_command = "#{akra[:bundler_bin_path]} exec unicorn_rails -c #{unicorn_config_path} -E production"
   supervisor_service "#{app[:name]}_unicorn" do
     action :enable
-    command "#{akra[:unicorn_bin_path]} -c #{unicorn_config_path} -E production"
+    command unicorn_command
 
     autostart false
     autorestart false
-    user "deploy"
+    user app[:username]
     stdout_logfile "#{app[:home_dir]}/shared/log/unicorn-out.log"
     stderr_logfile "#{app[:home_dir]}/shared/log/unicorn-err.log"
     directory "#{app[:home_dir]}/current"

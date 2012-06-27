@@ -6,7 +6,7 @@ default[:akra][:packages] = %w{
   libmagickcore-dev
 }
 default[:akra][:rvm_wrapper_prefix] = 'sys'
-default[:akra][:unicorn_bin_path]   = "/usr/local/rvm/bin/sys_unicorn_rails"
+default[:akra][:bundler_bin_path]   = "/usr/local/rvm/bin/sys_bundle"
 
 # mysql passwords
 mysql["server_root_password"]   = "akrapolskalubimysql"
