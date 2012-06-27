@@ -17,6 +17,7 @@ default[:akra_essentials].tap do |akra|
       :name => name,
       :home_dir => home_dir = "/home/#{name}",
       :username => name,
+      :group => 'deploy',
       :password => "#{name}_deploy_password",
       :db_username => name,
       :db_name => name,

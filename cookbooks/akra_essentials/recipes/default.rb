@@ -93,6 +93,14 @@ akra[:apps].each do |app|
     )
   end
 
+  %w(current shared shared/log).each do |path|
+    directory "#{app[:home_dir]}/#{path}" do
+      owner app[:username]
+      group "deploy"
+      mode "770"
+    end
+  end
+
   supervisor_service "#{app[:name]}_unicorn" do
     action :enable
     command "#{akra[:unicorn_bin_path]} -c #{app[:unicorn_config_path]} -E production"
