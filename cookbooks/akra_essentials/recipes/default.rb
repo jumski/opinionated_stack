@@ -7,7 +7,9 @@ include_recipe "redisio::install"
 include_recipe "redisio::enable"
 include_recipe "rvm::system"
 
-node[:akra_essentials][:packages].each do |name|
+akra = node[:akra_essentials]
+
+akra[:packages].each do |name|
   package name
 end
 
@@ -20,7 +22,7 @@ directory "/etc/supervisor.d" do
   mode "770"
 end
 
-rvm_wrapper default[:akra_essentials][:bundle_wrapper_prefix] do
+rvm_wrapper akra[:bundle_wrapper_prefix] do
   ruby_string "default@global"
   binary "bundle"
 end
@@ -33,7 +35,11 @@ connection_info = {
   :username => 'root',
   :password => node[:mysql][:server_root_password]
 }
-node[:akra_essentials][:apps].each do |name, app|
+akra['apps'].keys.each do |name|
+
+  app = akra['apps'][name]
+
+  raise name.inspect
 
   # unix user
   user app[:username] do
@@ -82,15 +88,22 @@ node[:akra_essentials][:apps].each do |name, app|
       :username         => app[:username],
       :group            => app[:group],
       :worker_processes => app[:unicorn_worker_processes],
-      :root             => "#{app[:home_dir]}/current"
+      :root             => "#{app[:home_dir]}/current",
+      :timeout          => 30,
+      :preload_app      => true
     )
   end
 
   supervisor_service "#{name}_unicorn" do
     action :enable
+    command "#{a}"
+
     autostart true
+    autorestart false
     user "deploy"
-    command ""
+    stdout_logfile "#{app[:home_dir]}/current/log/unicorn-out.log"
+    stderr_logfile "#{app[:home_dir]}/current/log/unicorn-err.log"
+    directory "#{app[:home_dir]}/current"
   end
 
 end
