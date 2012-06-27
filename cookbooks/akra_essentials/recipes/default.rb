@@ -93,17 +93,17 @@ akra[:apps].each do |app|
     )
   end
 
-  # supervisor_service "#{app[:name]}_unicorn" do
-  #   action :enable
-  #   # command "#{a}"
+  supervisor_service "#{app[:name]}_unicorn" do
+    action :enable
+    command "#{akra[:unicorn_bin_path]} -c #{app[:unicorn_config_path]} -E production"
 
-  #   autostart true
-  #   autorestart false
-  #   user "deploy"
-  #   stdout_logfile "#{app[:home_dir]}/current/log/unicorn-out.log"
-  #   stderr_logfile "#{app[:home_dir]}/current/log/unicorn-err.log"
-  #   directory "#{app[:home_dir]}/current"
-  # end
+    autostart false
+    autorestart false
+    user "deploy"
+    stdout_logfile "#{app[:home_dir]}/shared/log/unicorn-out.log"
+    stderr_logfile "#{app[:home_dir]}/shared/log/unicorn-err.log"
+    directory "#{app[:home_dir]}/current"
+  end
 
 end
 

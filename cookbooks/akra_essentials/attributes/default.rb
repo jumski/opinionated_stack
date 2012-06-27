@@ -1,3 +1,4 @@
+include_attribute 'rvm::default'
 
 default[:akra_essentials].tap do |akra|
 
@@ -9,7 +10,7 @@ default[:akra_essentials].tap do |akra|
   }
 
   akra[:rvm_wrapper_prefix] = 'sys'
-
+  akra[:unicorn_bin_path]   = "/usr/local/rvm/bin/sys_unicorn_rails"
 
   akra[:apps] = %w(akra_polska epics).map do |name|
     {
@@ -38,10 +39,6 @@ default[:akra_essentials].tap do |akra|
 
 end
 
-# akra['rvm_wrapper_path_prefix'] = hax
-# akra['unicorn_bin_path'] = "#{akra[:rvm_wrapper_path_prefix]}unicorn"
-# akra['rvm_wrapper_path_prefix'] = 'hax'
-# akra['unicorn_bin_path'] = 'hax'
 
 
 # mysql passwords
