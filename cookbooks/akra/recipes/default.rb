@@ -5,6 +5,7 @@ include_recipe "supervisor"
 include_recipe "redisio::install"
 include_recipe "redisio::enable"
 include_recipe "rvm::system"
+include_recipe "sudo"
 
 akra = node[:akra]
 
@@ -114,7 +115,8 @@ akra[:apps].each do |app|
       :socket_path      => unicorn_socket_path,
       :root             => "#{app[:home_dir]}/current",
       :timeout          => 30,
-      :preload_app      => true
+      :preload_app      => true,
+      :rolling_deploy   => app[:rolling_deploy]
     )
   end
 
@@ -131,17 +133,32 @@ akra[:apps].each do |app|
     )
   end
 
-  unicorn_command = "#{akra[:bundler_bin_path]} exec unicorn_rails -c #{unicorn_config_path} -E production"
-  supervisor_service "#{app[:name]}_unicorn" do
-    action :enable
-    command unicorn_command
+  # use supervisor only for simple sites without rolling deploy
+  unless app[:rolling_deploy]
+    sudo "#{app[:name]}_unicorn" do
+      user app[:username]
+      runas 'root'
+      commands [
+        "/usr/local/bin/supervisorctl pid #{app[:name]}_unicorn",
+        "/usr/local/bin/supervisorctl status #{app[:name]}_unicorn",
+        "/usr/local/bin/supervisorctl restart #{app[:name]}_unicorn"
+      ]
+      host "ALL"
+      nopasswd true
+    end
 
-    autostart false
-    autorestart false
-    user app[:username]
-    stdout_logfile "#{app[:home_dir]}/shared/log/unicorn-out.log"
-    stderr_logfile "#{app[:home_dir]}/shared/log/unicorn-err.log"
-    directory "#{app[:home_dir]}/current"
+    unicorn_command = "#{akra[:bundler_bin_path]} exec unicorn_rails -c #{unicorn_config_path} -E production"
+    supervisor_service "#{app[:name]}_unicorn" do
+      action :enable
+      command unicorn_command
+
+      autostart false
+      autorestart false
+      user app[:username]
+      stdout_logfile "#{app[:home_dir]}/shared/log/unicorn-out.log"
+      stderr_logfile "#{app[:home_dir]}/shared/log/unicorn-err.log"
+      directory "#{app[:home_dir]}/current"
+    end
   end
 
 end

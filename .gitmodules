@@ -28,3 +28,6 @@
 [submodule "cookbooks/database"]
 	path = cookbooks/database
 	url = git@github.com:jumski/database-cookbook.git
+[submodule "cookbooks/sudo"]
+	path = cookbooks/sudo
+	url = git://github.com/opscode-cookbooks/sudo.git

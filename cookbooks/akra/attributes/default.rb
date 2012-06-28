@@ -15,3 +15,6 @@ mysql["server_debian_password"] = "akrapolskalubimysql"
 
 # nginx defaults
 nginx[:user] = "deploy"
+
+# sudo
+node['authorization']['sudo']['include_sudoers_d'] = true

@@ -24,7 +24,7 @@ if GC.respond_to?(:copy_on_write_friendly=)
   GC.copy_on_write_friendly = true
 end
 
-
+<% if @rolling_deploy %>
 before_fork do |server, worker|
   ##
   # When sent a USR2, Unicorn will suffix its pidfile with .oldbin and
@@ -83,3 +83,4 @@ after_fork do |server, worker|
     end
   end
 end
+<% end %>
