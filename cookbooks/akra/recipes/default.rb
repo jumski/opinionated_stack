@@ -91,7 +91,7 @@ akra[:apps].each do |app|
     )
   end
 
-  %w(shared shared/log shared/config).each do |path|
+  %w(shared shared/pids shared/log shared/config).each do |path|
     directory "#{app[:home_dir]}/#{path}" do
       owner app[:username]
       group "deploy"
