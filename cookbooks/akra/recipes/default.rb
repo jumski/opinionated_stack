@@ -52,7 +52,7 @@ akra[:apps].each do |app|
   app[:db_name]     ||= app[:name]
   app[:db_password] ||= "#{app[:name]}_mysql_password"
   app[:unicorn_worker_processes] ||= 1
-  app[:unicorn_socket_path]      ||= "#{app[:home_dir]}/current/tmp/unicorn.sock"
+  unicorn_socket_path = "#{app[:home_dir]}/current/tmp/unicorn.sock"
 
   # unix user
   user app[:username] do
@@ -86,7 +86,7 @@ akra[:apps].each do |app|
     variables(
       :domains     => app[:domains],
       :name        => app[:name],
-      :socket_path => app[:unicorn_socket_path],
+      :socket_path => unicorn_socket_path,
       :root        => "#{app[:home_dir]}/current"
     )
   end
@@ -111,7 +111,7 @@ akra[:apps].each do |app|
       :username         => app[:username],
       :group            => app[:group],
       :worker_processes => app[:unicorn_worker_processes],
-      :socket_path      => app[:unicorn_socket_path],
+      :socket_path      => unicorn_socket_path,
       :root             => "#{app[:home_dir]}/current",
       :timeout          => 30,
       :preload_app      => true
