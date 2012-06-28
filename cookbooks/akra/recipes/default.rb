@@ -64,6 +64,10 @@ akra[:apps].each do |app|
     supports({:manage_home => true})
   end
 
+  directory app[:home_dir] do
+    mode '0700'
+  end
+
   # mysql db with user
   mysql_database app[:db_name] do
     connection connection_info
@@ -74,7 +78,7 @@ akra[:apps].each do |app|
     password app[:db_password]
     database_name app[:db_name]
     host '%'
-    privileges [:select, :update, :insert, :create, :drop]
+    privileges [:all]
     action :grant
   end
 
@@ -103,21 +107,26 @@ akra[:apps].each do |app|
 
   # nginx site config
   unicorn_config_path = "#{app[:home_dir]}/shared/config/unicorn_config.rb"
+  unicorn_config_variables = {
+    :username         => app[:username],
+    :group            => app[:group],
+    :worker_processes => app[:unicorn_worker_processes],
+    :socket_path      => unicorn_socket_path,
+    :root             => "#{app[:home_dir]}/current",
+    :timeout          => 30,
+    :preload_app      => true,
+    :rolling_deploy   => app[:rolling_deploy]
+  }
+  unless app[:rolling_deploy]
+    unicorn_config_variables[:pidfile_path] = "#{app[:home_dir]}/current/tmp/pids/"
+  end
+
   template unicorn_config_path do
     source "unicorn_rails_config.erb"
     mode '0750'
     owner app[:username]
     group 'deploy'
-    variables(
-      :username         => app[:username],
-      :group            => app[:group],
-      :worker_processes => app[:unicorn_worker_processes],
-      :socket_path      => unicorn_socket_path,
-      :root             => "#{app[:home_dir]}/current",
-      :timeout          => 30,
-      :preload_app      => true,
-      :rolling_deploy   => app[:rolling_deploy]
-    )
+    variables(unicorn_config_variables)
   end
 
   # nginx site config
