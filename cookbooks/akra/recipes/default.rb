@@ -41,6 +41,7 @@ connection_info = {
 
 akra[:apps].each do |app|
   raise "Application name is required!" unless app[:name]
+  raise "Application domains are required!" unless app[:domains].size > 0
 
   # override defaults for app with provided attributes
   app[:home_dir]    ||= "/home/#{app[:name]}"
