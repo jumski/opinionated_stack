@@ -13,7 +13,7 @@ preload_app <%= @preload_app %>
 timeout <%= @timeout %>
 
 # Listen on a Unix data socket
-listen <%= @socket_path %>, :backlog => 2048
+listen '<%= @socket_path %>', :backlog => 2048
 
 
 ##

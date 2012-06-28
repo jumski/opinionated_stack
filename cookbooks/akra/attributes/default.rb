@@ -12,3 +12,6 @@ default[:akra][:bundler_bin_path]   = "/usr/local/rvm/bin/sys_bundle"
 mysql["server_root_password"]   = "akrapolskalubimysql"
 mysql["server_repl_password"]   = "akrapolskalubimysql"
 mysql["server_debian_password"] = "akrapolskalubimysql"
+
+# nginx defaults
+nginx[:user] = "deploy"

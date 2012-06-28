@@ -2,7 +2,6 @@
 include_recipe "mysql::server"
 include_recipe "database"
 include_recipe "supervisor"
-include_recipe "nginx::default"
 include_recipe "redisio::install"
 include_recipe "redisio::enable"
 include_recipe "rvm::system"
@@ -14,6 +13,12 @@ akra[:packages].each { |name| package name }
 group "deploy" do
   gid 2001
 end
+
+# unix user
+user node[:nginx][:user] do
+  gid "deploy"
+end
+include_recipe "nginx::default"
 
 directory "/etc/supervisor.d" do
   group "deploy"
@@ -104,6 +109,7 @@ akra[:apps].each do |app|
       :username         => app[:username],
       :group            => app[:group],
       :worker_processes => app[:unicorn_worker_processes],
+      :socket_path      => app[:unicorn_socket_path],
       :root             => "#{app[:home_dir]}/current",
       :timeout          => 30,
       :preload_app      => true
