@@ -13,7 +13,7 @@ server {
 
   root <%= @root %>;
 
-  location ~ ^/assets/ {
+  location ~ ^/assets.* {
     root <%= @root %>/public;
     gzip_static on;
     expires max;
