@@ -84,7 +84,7 @@ akra[:apps].each do |app|
     owner "root"
     group "root"
     variables(
-      :domains     => app[:domains].map{|d| [d, "www.#{d}"]}.flatten,
+      :domains     => app[:domains],
       :name        => app[:name],
       :socket_path => app[:unicorn_socket_path],
       :root        => "#{app[:home_dir]}/current"
