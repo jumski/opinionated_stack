@@ -65,7 +65,7 @@ akra[:apps].each do |app|
   end
 
   directory app[:home_dir] do
-    mode '0700'
+    mode '0750'
   end
 
   # mysql db with user
@@ -118,7 +118,7 @@ akra[:apps].each do |app|
     :rolling_deploy   => app[:rolling_deploy]
   }
   unless app[:rolling_deploy]
-    unicorn_config_variables[:pidfile_path] = "#{app[:home_dir]}/current/tmp/pids/"
+    unicorn_config_variables[:pidfile_path] = "#{app[:home_dir]}/current/tmp/pids/unicorn.pid"
   end
 
   template unicorn_config_path do
