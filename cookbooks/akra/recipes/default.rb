@@ -115,10 +115,12 @@ akra[:apps].each do |app|
     :root             => "#{app[:home_dir]}/current",
     :timeout          => 30,
     :preload_app      => true,
-    :rolling_deploy   => app[:rolling_deploy]
+    :rolling_deploy   => app[:rolling_deploy],
   }
-  unless app[:rolling_deploy]
+  if app[:rolling_deploy]
     unicorn_config_variables[:pidfile_path] = "#{app[:home_dir]}/current/tmp/pids/unicorn.pid"
+    unicorn_config_variables[:stderr_path]  = "#{app[:home_dir]}/shared/log/unicorn-err.log"
+    unicorn_config_variables[:stdout_path]  = "#{app[:home_dir]}/shared/log/unicorn-out.log"
   end
 
   template unicorn_config_path do
