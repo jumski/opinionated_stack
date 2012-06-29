@@ -53,7 +53,7 @@ akra[:apps].each do |app|
   app[:db_name]     ||= app[:name]
   app[:db_password] ||= "#{app[:name]}_mysql_password"
   app[:unicorn_worker_processes] ||= 1
-  unicorn_socket_path = "#{app[:home_dir]}/current/tmp/unicorn.sock"
+  unicorn_socket_path = "#{app[:home_dir]}/shared/sockets/unicorn.sock"
 
   # unix user
   user app[:username] do
@@ -96,7 +96,7 @@ akra[:apps].each do |app|
     )
   end
 
-  %w(shared shared/pids shared/log shared/config).each do |path|
+  %w(shared shared/sockets shared/pids shared/log shared/config).each do |path|
     directory "#{app[:home_dir]}/#{path}" do
       owner app[:username]
       group "deploy"
