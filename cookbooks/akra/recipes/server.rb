@@ -22,3 +22,11 @@ rvm_wrapper akra[:rvm_wrapper_prefix] do
   ruby_string "default@global"
   binary "bundle"
 end
+
+logrotate_app "redis" do
+  cookbook "logrotate"
+  path "/var/log/redis_6379.log"
+  frequency "weekly"
+  create "644 root adm"
+  rotate 7
+end
