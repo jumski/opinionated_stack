@@ -10,8 +10,8 @@ connection_info = {
 }
 
 akra[:apps].each do |app|
-  raise "Application name is required!" unless app[:name]
-  raise "Application domains are required!" unless app[:domains].size > 0
+  raise "Application name is required!"        unless app[:name]
+  raise "Application main_domain is required!" unless app[:main_domain].size > 0
 
   # override defaults for app with provided attributes
   app[:home_dir]    ||= "/home/#{app[:name]}"
@@ -58,7 +58,8 @@ akra[:apps].each do |app|
     owner "root"
     group "root"
     variables(
-      :domains     => app[:domains],
+      :main_domain      => app[:main_domain],
+      :redirect_domains => app[:redirect_domains],
       :name        => app[:name],
       :socket_path => unicorn_socket_path,
       :root        => "#{app[:home_dir]}/current"

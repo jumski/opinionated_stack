@@ -3,10 +3,10 @@ upstream <%= @name %>_unicorn {
   server unix:<%= @socket_path %>;
 }
 
-# config for <%= @name %> application
+# main server block
 server {
   listen 80;
-  server_name <%= @domains.join(' ') %>;
+  server_name <%= @main_domain %>;
   client_max_body_size 30M;
 
   keepalive_timeout 5;
@@ -39,4 +39,13 @@ server {
   }
 
 }
+
+<% @redirect_domains.each do |domain| %>
+# redirect <%= domain %> to <%= @main_domain %>
+server {
+  listen 80;
+  server_name <%= domain %>;
+  rewrite ^ http://<%= @main_domain %> permanent;
+}
+<% end %>
 
