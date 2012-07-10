@@ -2,6 +2,9 @@
 
 rails_env = ENV['RAILS_ENV'] || 'production'
 
+app_path = '<%= @root %>'
+working_directory app_path
+
 # 16 workers and 1 master
 worker_processes <%= @worker_processes %>
 
@@ -18,7 +21,7 @@ listen '<%= @socket_path %>', :backlog => 2048
 <% if @rolling_deploy %>
 stdout_path '<%= @stdout_path %>'
 stderr_path '<%= @stderr_path %>'
-pid '<%= @pidfile_path %>'
+pid '<%= @root + '/tmp/pids/unicorn.pid' %>'
 <% end %>
 
 
@@ -43,7 +46,7 @@ before_fork do |server, worker|
   #
   # Using this method we get 0 downtime deploys.
 
-  old_pid = '<%= @pidfile_path %>.oldbin'
+  old_pid = '<%= @root + '/tmp/pids/unicorn.pid.oldbin' %>'
   if File.exists?(old_pid) && server.pid != old_pid
     begin
       Process.kill("QUIT", File.read(old_pid).to_i)
