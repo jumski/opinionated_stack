@@ -45,7 +45,7 @@ server {
 server {
   listen 80;
   server_name <%= domain %>;
-  rewrite ^ http://<%= @main_domain %> permanent;
+  rewrite ^ $scheme://<%= @main_domain %>$uri permanent;
 }
 <% end %>
 
