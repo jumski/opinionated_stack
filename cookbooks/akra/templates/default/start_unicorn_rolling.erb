@@ -1,0 +1,11 @@
+#!/bin/bash
+cd <%= @root %>/current;
+
+UNICORN_PIDFILE=<%= @root %>/shared/pids/unicorn.pid
+
+if test -f $UNICORN_PIDFILE && kill -0 $(cat $UNICORN_PIDFILE); then
+  echo "Unicorn exist - exiting"
+  exit 0;
+fi
+
+<%= @bundler_bin_path %> exec unicorn_rails -c <%= @root %>/shared/config/unicorn_config.rb -E production -D

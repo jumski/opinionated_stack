@@ -1,0 +1,10 @@
+#!/bin/bash
+
+UNICORN_PIDFILE=<%= @root %>/shared/pids/unicorn.pid
+
+if ! test -f $UNICORN_PIDFILE; then
+  echo "Cannot find pid file! Exiting"
+  exit 1
+fi
+
+kill -USR2 $(cat $UNICORN_PIDFILE)

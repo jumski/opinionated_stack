@@ -1,0 +1,16 @@
+#!/bin/bash
+cd <%= @root %>;
+
+if ! test -f <%= @root %>/shared/pids/unicorn.pid; then
+  echo "Cannot find pid file! Exiting"
+  exit 1
+fi
+
+UNICORN_PID=$(cat <%= @root %>/shared/pids/unicorn.pid)
+
+if ! kill -0 $UNICORN_PID; then
+  echo "Unicorn does not exist - exiting"
+  exit 0;
+fi
+
+kill -QUIT $UNICORN_PID

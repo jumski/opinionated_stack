@@ -66,7 +66,7 @@ akra[:apps].each do |app|
     )
   end
 
-  %w(shared shared/sockets shared/pids shared/log shared/config).each do |path|
+  %w(bin shared shared/sockets shared/pids shared/log shared/config).each do |path|
     directory "#{app[:home_dir]}/#{path}" do
       owner app[:username]
       group "deploy"
@@ -88,7 +88,7 @@ akra[:apps].each do |app|
     :rolling_deploy   => app[:rolling_deploy],
   }
   if app[:rolling_deploy]
-    unicorn_config_variables[:pidfile_path] = "#{app[:home_dir]}/shared/pids/unicorn.pid"
+    unicorn_config_variables[:pidfile_path] = unicorn_pidfile_path = "#{app[:home_dir]}/shared/pids/unicorn.pid"
     unicorn_config_variables[:stderr_path]  = "#{app[:home_dir]}/shared/log/unicorn-err.log"
     unicorn_config_variables[:stdout_path]  = "#{app[:home_dir]}/shared/log/unicorn-out.log"
   end
@@ -99,6 +99,29 @@ akra[:apps].each do |app|
     owner app[:username]
     group 'deploy'
     variables(unicorn_config_variables)
+  end
+
+  # create restart scripts
+  %w(start stop restart).each do |action|
+    template_variables = {
+      :root                => app[:home_dir],
+      :name                => app[:name],
+      :bundler_bin_path    => akra[:bundler_bin_path],
+      :unicorn_config_path => unicorn_config_path
+    }
+    template_path = if app[:rolling_deploy]
+                      "#{action}_unicorn_rolling.erb"
+                    else
+                      "#{action}_unicorn_supervisor.erb"
+                    end
+
+    template "#{app[:home_dir]}/bin/#{action}" do
+      source template_path
+      mode '0750'
+      owner app[:username]
+      group 'deploy'
+      variables template_variables
+    end
   end
 
   # nginx site config
@@ -122,7 +145,9 @@ akra[:apps].each do |app|
       commands [
         "/usr/local/bin/supervisorctl pid #{app[:name]}_unicorn",
         "/usr/local/bin/supervisorctl status #{app[:name]}_unicorn",
-        "/usr/local/bin/supervisorctl restart #{app[:name]}_unicorn"
+        "/usr/local/bin/supervisorctl start #{app[:name]}_unicorn",
+        "/usr/local/bin/supervisorctl stop #{app[:name]}_unicorn",
+        "/usr/local/bin/supervisorctl restart #{app[:name]}_unicorn",
       ]
       host "ALL"
       nopasswd true
