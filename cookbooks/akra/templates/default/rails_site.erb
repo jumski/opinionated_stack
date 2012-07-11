@@ -13,17 +13,13 @@ server {
 
   root <%= @root %>;
 
-  location ~ ^/assets.* {
-    root <%= @root %>/public;
+  location ~* \.(jpeg|jpg|gif|png|ico|css|bmp|js)$ {
+    root /home/epics/current/public;
     gzip_static on;
     expires max;
     add_header Cache-Control public;
     add_header ETag "";
     break;
-  }
-
-  location ~* \.(jpeg|jpg|gif|png|ico|css|bmp|js)$ {
-    root /home/epics/current/public;
   }
 
   location / {
