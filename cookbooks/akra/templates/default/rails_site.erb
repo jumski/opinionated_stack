@@ -14,7 +14,7 @@ server {
   root <%= @root %>;
 
   location ~* \.(jpeg|jpg|gif|png|ico|css|bmp|js)$ {
-    root /home/epics/current/public;
+    root <%= @root %>/public;
     gzip_static on;
     expires max;
     add_header Cache-Control public;
