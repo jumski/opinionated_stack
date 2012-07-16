@@ -13,6 +13,8 @@ server {
 
   root <%= @root %>;
 
+  <% unless @asset_domain %>
+  # serve assets from the same domain
   location ~* \.(jpeg|jpg|gif|png|ico|css|bmp|js)$ {
     root <%= @root %>/public;
     gzip_static on;
@@ -21,6 +23,7 @@ server {
     add_header ETag "";
     break;
   }
+  <% end %>
 
   location / {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -39,6 +42,21 @@ server {
   }
 
 }
+
+<% if @asset_domain %>
+# serve assets from asset host
+server {
+  listen 80;
+  server_name <%= @asset_domain %>;
+
+  root <%= @root %>/public;
+  gzip_static on;
+  expires max;
+  add_header Cache-Control public;
+  add_header ETag "";
+  break;
+}
+<% end %>
 
 <% @redirect_domains.each do |domain| %>
 # redirect <%= domain %> to <%= @main_domain %>

@@ -60,10 +60,12 @@ akra[:apps].each do |app|
     variables(
       :main_domain      => app[:main_domain],
       :redirect_domains => app[:redirect_domains],
-      :name        => app[:name],
-      :socket_path => unicorn_socket_path,
-      :root        => "#{app[:home_dir]}/current"
+      :name             => app[:name],
+      :socket_path      => unicorn_socket_path,
+      :root             => "#{app[:home_dir]}/current",
+      :asset_domain     => app[:asset_domain]
     )
+    notifies :reload, "service[nginx]"
   end
 
   %w(bin shared shared/sockets shared/pids shared/log shared/config).each do |path|
@@ -124,7 +126,7 @@ akra[:apps].each do |app|
     end
   end
 
-  # nginx site config
+  # database.yml
   template "#{app[:home_dir]}/shared/config/database.yml" do
     source "database.yml.erb"
     mode '0750'
