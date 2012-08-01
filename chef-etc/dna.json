@@ -20,6 +20,13 @@
         "unicorn_worker_processes": 1,
         "rolling_deploy": true,
         "asset_domain" : "assets.epics.pl"
+      },
+
+      {
+        "name": "copter",
+        "main_domain" : "copter.akrapolska.com",
+        "redirect_domains": [],
+        "rolling_deploy": false
       }
     ]
   },
