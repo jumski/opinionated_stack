@@ -169,4 +169,16 @@ akra[:apps].each do |app|
     end
   end
 
+  dotfiles_path = "#{app[:home_dir]}/dotfiles"
+  git dotfiles_path do
+    repository "git://github.com/AkraPolska/dotfiles.git"
+    reference "master"
+    action :sync
+  end
+  directory dotfiles_path do
+    owner app[:username]
+    group 'deploy'
+    recursive true
+  end
+
 end
