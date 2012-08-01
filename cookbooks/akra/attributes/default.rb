@@ -4,6 +4,7 @@ default[:akra][:packages] = %w{
   libshadow-ruby1.8
   imagemagick
   libmagickcore-dev
+  vim-nox
 }
 default[:akra][:rvm_wrapper_prefix] = 'sys'
 default[:akra][:bundler_bin_path]   = "/usr/local/rvm/bin/sys_bundle"
