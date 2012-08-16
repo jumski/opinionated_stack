@@ -1,0 +1,6 @@
+#!/bin/bash
+
+WORKER=$1
+ACTION=$2
+
+sudo supervisorctl $ACTION <%= @app_name %>_worker_$WORKER

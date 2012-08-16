@@ -19,7 +19,8 @@
         "redirect_domains": ["www.epics.pl"],
         "unicorn_worker_processes": 1,
         "rolling_deploy": true,
-        "asset_domain" : "assets.epics.pl"
+        "asset_domain" : "assets.epics.pl",
+        "resque_workers" : [ "*" ]
       },
 
       {

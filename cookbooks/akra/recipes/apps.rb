@@ -169,6 +169,50 @@ akra[:apps].each do |app|
     end
   end
 
+  # create supervisor configs for resque workers
+  app[:resque_workers] && app[:resque_workers].each_with_index do |queue, index|
+    worker_name = "worker_#{index}"
+    worker_service_name = "#{app[:name]}_#{worker_name}"
+
+    supervisor_service worker_service_name do
+      action :enable
+      command "#{akra[:bundler_bin_path]} exec rake resque:work RAILS_ENV=production VERBOSE=1 QUEUE=#{queue}"
+
+      autostart true
+      autorestart true
+      user app[:username]
+      stdout_logfile "#{app[:home_dir]}/shared/log/#{worker_name}-out.log"
+      stderr_logfile "#{app[:home_dir]}/shared/log/#{worker_name}-err.log"
+      directory "#{app[:home_dir]}/current"
+    end
+
+    # allow restarting workers by app user
+    sudo "#{app[:name]}_workers" do
+      user app[:username]
+      runas 'root'
+      commands [
+        "/usr/local/bin/supervisorctl pid #{worker_service_name}",
+        "/usr/local/bin/supervisorctl status #{worker_service_name}",
+        "/usr/local/bin/supervisorctl start #{worker_service_name}",
+        "/usr/local/bin/supervisorctl stop #{worker_service_name}",
+        "/usr/local/bin/supervisorctl restart #{worker_service_name}",
+      ]
+      host "ALL"
+      nopasswd true
+    end
+
+    # create binaries for workers actions (used by capistrano)
+    template "#{app[:home_dir]}/bin/worker" do
+      source 'worker_manager.erb'
+      mode '0750'
+      owner app[:username]
+      group 'deploy'
+      variables({
+        :app_name => app[:name]
+      })
+    end
+  end
+
   dotfiles_path = "#{app[:home_dir]}/dotfiles"
   git dotfiles_path do
     repository "git://github.com/AkraPolska/dotfiles.git"
