@@ -1,0 +1,8 @@
+
+#!/bin/bash
+
+ACTION=$1
+
+<% @workers_cnt.times do |time| %>
+worker <%= time %> $ACTION
+<% end %>
