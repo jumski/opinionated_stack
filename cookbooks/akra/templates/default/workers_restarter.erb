@@ -4,5 +4,5 @@
 ACTION=$1
 
 <% @workers.each do |name, queue| %>
-worker <%= name %> $ACTION
+$HOME/bin/worker <%= name %> $ACTION
 <% end %>
