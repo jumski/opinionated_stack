@@ -171,8 +171,8 @@ akra[:apps].each do |app|
 
   # create supervisor configs for resque workers
   if app[:resque_workers]
-    app[:resque_workers].each_with_index do |queue, index|
-      worker_name = "worker_#{index}"
+    app[:resque_workers].each do |name, queue|
+      worker_name = "worker_#{name}"
       worker_service_name = "#{app[:name]}_#{worker_name}"
 
       supervisor_service worker_service_name do
@@ -209,7 +209,7 @@ akra[:apps].each do |app|
         owner app[:username]
         group 'deploy'
         variables({
-          :app_name => app[:name]
+          :app_name => app[:name],
         })
       end
     end
@@ -221,7 +221,7 @@ akra[:apps].each do |app|
       owner app[:username]
       group 'deploy'
       variables({
-        :workers_cnt => app[:resque_workers].size,
+        :workers => app[:resque_workers]
       })
     end
   end
