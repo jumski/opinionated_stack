@@ -1,4 +1,5 @@
 include_attribute 'rvm::default'
+include_attribute 'postfix::default'
 
 default[:akra][:packages] = %w{
   libshadow-ruby1.8
@@ -19,3 +20,6 @@ nginx[:user] = "deploy"
 
 # sudo
 node['authorization']['sudo']['include_sudoers_d'] = true
+
+postfix['mydomain'] = 'beta.turnyourtime.com'
+postfix['myorigin'] = 'beta.turnyourtime.com'
