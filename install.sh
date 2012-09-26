@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if ! $(which sudo && which wget && which lsb-release); then
-  apt-get install sudo wget lsb-release
+  apt-get install -y sudo wget lsb-release
 fi
 
 echo "deb http://apt.opscode.com/ `lsb_release -cs`-0.10 main" | tee /etc/apt/sources.list.d/opscode.list
@@ -9,11 +9,11 @@ mkdir -p /etc/apt/trusted.gpg.d
 gpg --keyserver keys.gnupg.net --recv-keys 83EF826A
 gpg --export packages@opscode.com | tee /etc/apt/trusted.gpg.d/opscode-keyring.gpg > /dev/null
 apt-get update
-apt-get install opscode-keyring
+apt-get install -y opscode-keyring
 apt-get upgrade
 
 if ! which chef-solo; then
-  apt-get install chef
+  apt-get install -y chef
 fi
 
 mkdir -p /var/chef-solo
