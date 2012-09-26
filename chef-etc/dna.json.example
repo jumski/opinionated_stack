@@ -1,0 +1,28 @@
+{
+  "akra": {
+    "mail_domain" : "beta.turnyourtime.com",
+    "apps": [
+      {
+        "name": "simple_app",
+        "main_domain" : "simple_app.net",
+        "redirect_domains" : ["www.simple_app.net"],
+        "rolling_deploy": false
+      },
+
+      {
+        "name": "complex_app",
+        "main_domain" : "complex_app.pl",
+        "redirect_domains": ["www.complex_app.pl"],
+        "rolling_deploy": true,
+        "unicorn_worker_processes": 1,
+        "asset_domain" : "assets.complex_app.pl",
+        "resque_workers" : {
+          "default" : "*"
+        }
+      },
+
+    ]
+  },
+
+  "run_list": [ "akra" ]
+}
