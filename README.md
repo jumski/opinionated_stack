@@ -13,13 +13,19 @@
   1.2.3.4 hostname hostname.domain.name
   ```
 
-3. Download install.sh script and run it
+3. Clone chef-repo somewhere:
 
   ```bash
-  wget -O /root/install.sh LINK_TO_RAW_VERSION_OF_INSTALL_SH
-  chmod +x install.sh
+  git clone git@github.com:AkraPolska/chef-repo.git /tmp/chef-repo
+  ```
+
+4. Install it
+
+  ```bash
+  cd /tmp/chef-repo
   ./install.sh
   ```
-4. Hopefully it will be all good now :-)
+
+5. Hopefully it will be all good now :-)
 
 ## Setting up applications
