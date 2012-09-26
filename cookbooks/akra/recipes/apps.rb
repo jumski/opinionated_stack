@@ -77,6 +77,18 @@ akra[:apps].each do |app|
     end
   end
 
+  if app[:rolling_deploy]
+    bash "set shared/sockets umask and unicorn socket permission" do
+      user 'root'
+      code "
+        umask 0017
+        if [ -f #{unicorn_socket_path} ]; then
+          chmod g+rw #{unicorn_socket_path}
+        fi
+      "
+    end
+  end
+
   # nginx site config
   unicorn_config_path = "#{app[:home_dir]}/shared/config/unicorn_config.rb"
   unicorn_config_variables = {
