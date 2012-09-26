@@ -1,4 +1,4 @@
-### Akra Chef Repo for solo servers
+# Akra Chef Repo for solo servers
 
 
 ## Installation
