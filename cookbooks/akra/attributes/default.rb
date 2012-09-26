@@ -21,6 +21,6 @@ nginx[:user] = "deploy"
 # sudo
 node['authorization']['sudo']['include_sudoers_d'] = true
 
-postfix['mydomain'] = default[:akra][:mail_domain]
-postfix['myorigin'] = default[:akra][:mail_domain]
+postfix['mydomain'] = node[:akra][:mail_domain]
+postfix['myorigin'] = node[:akra][:mail_domain]
 postfix['smtp_use_tls'] = true
