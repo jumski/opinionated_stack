@@ -3,7 +3,7 @@
 
 ## Installation
 
-1. Install Akra dotfiles for root user
+1. Install Akra dotfiles for root user (https://github.com/AkraPolska/dotfiles)
 
 2. Setup hostname and fqdn for a server
 
