@@ -23,3 +23,4 @@ node['authorization']['sudo']['include_sudoers_d'] = true
 
 postfix['mydomain'] = 'beta.turnyourtime.com'
 postfix['myorigin'] = 'beta.turnyourtime.com'
+postfix['smtp_use_tls'] = true
