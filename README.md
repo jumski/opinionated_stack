@@ -25,6 +25,9 @@
   cd /tmp/chef-repo
   ./install.sh
   ```
+  
+  When asked for mdadm arrays, leave "all".
+  When asked for chef-server url, type "none".
 
 5. Hopefully it will be all good now :-)
 
