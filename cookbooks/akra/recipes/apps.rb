@@ -22,6 +22,7 @@ akra[:apps].each do |app|
   app[:db_name]     ||= app[:name]
   app[:db_password] ||= "#{app[:name]}_mysql_password"
   app[:unicorn_worker_processes] ||= 1
+  app[:environment] ||= 'production'
   unicorn_socket_path = "#{app[:home_dir]}/shared/sockets/unicorn.sock"
 
   # unix user
@@ -121,7 +122,8 @@ akra[:apps].each do |app|
       :root                => app[:home_dir],
       :name                => app[:name],
       :bundler_bin_path    => akra[:bundler_bin_path],
-      :unicorn_config_path => unicorn_config_path
+      :unicorn_config_path => unicorn_config_path,
+      :environment         => app[:environment]
     }
     template_path = if app[:rolling_deploy]
                       "#{action}_unicorn_rolling.erb"
@@ -147,7 +149,8 @@ akra[:apps].each do |app|
     variables(
       :database => app[:db_name],
       :user     => app[:db_username],
-      :password => app[:db_password]
+      :password => app[:db_password],
+      :environment => app[:environment]
     )
   end
 
@@ -167,7 +170,7 @@ akra[:apps].each do |app|
       nopasswd true
     end
 
-    unicorn_command = "#{akra[:bundler_bin_path]} exec unicorn_rails -c #{unicorn_config_path} -E production"
+    unicorn_command = "#{akra[:bundler_bin_path]} exec unicorn_rails -c #{unicorn_config_path} -E #{app[:environment]}"
     supervisor_service "#{app[:name]}_unicorn" do
       action :enable
       command unicorn_command

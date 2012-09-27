@@ -8,4 +8,4 @@ if test -f $UNICORN_PIDFILE && kill -0 $(cat $UNICORN_PIDFILE); then
   exit 0;
 fi
 
-<%= @bundler_bin_path %> exec unicorn_rails -c <%= @root %>/shared/config/unicorn_config.rb -E production -D
+<%= @bundler_bin_path %> exec unicorn_rails -c <%= @root %>/shared/config/unicorn_config.rb -E <%= @environment %> -D
