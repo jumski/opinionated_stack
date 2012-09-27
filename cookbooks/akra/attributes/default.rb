@@ -6,6 +6,8 @@ default[:akra][:packages] = %w{
   imagemagick
   libmagickcore-dev
   vim-nox
+  htop
+  ack-grep
 }
 default[:akra][:rvm_wrapper_prefix] = 'sys'
 default[:akra][:bundler_bin_path]   = "/usr/local/rvm/bin/sys_bundle"
