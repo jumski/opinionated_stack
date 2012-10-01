@@ -13,7 +13,10 @@ server {
 
   root <%= @root %>;
 
-  <% unless @asset_domain %>
+  <% # serve assets from public/assets subdirectory
+     # only if we do not use asset_domain
+     # and we do not want to serve static assets throught rails
+     if !@asset_domain && !@rails_serves_assets %>
   # serve assets from the same domain
   location ~* \.(jpeg|jpg|gif|png|ico|css|bmp|js)$ {
     root <%= @root %>/public;

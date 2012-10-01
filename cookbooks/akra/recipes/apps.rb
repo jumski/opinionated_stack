@@ -64,7 +64,8 @@ akra[:apps].each do |app|
       :name             => app[:name],
       :socket_path      => unicorn_socket_path,
       :root             => "#{app[:home_dir]}/current",
-      :asset_domain     => app[:asset_domain]
+      :asset_domain     => app[:asset_domain],
+      :rails_serves_assets => app[:rails_serves_assets]
     )
     notifies :reload, "service[nginx]"
   end
