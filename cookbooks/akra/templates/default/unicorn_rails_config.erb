@@ -23,6 +23,12 @@ pid '<%= @pidfile_path %>'
 
 working_directory '<%= @root %>'
 
+# hack for "Gemfile not found"
+# force gemfile location in environment
+before_exec do |server|
+  ENV['BUNDLE_GEMFILE'] = '<%= @root %>/Gemfile'
+end
+
 ##
 # REE
 
