@@ -38,6 +38,15 @@ akra[:apps].each do |app|
     mode '0750'
   end
 
+  bash "set permissions for .ssh and its contents" do
+    user "root"
+    code <<-EOH
+      chmod 700 #{app[:home_dir]}/.ssh &&
+        chmod 600 #{app[:home_dir]}/.ssh/*
+    EOH
+    only_if "test -d #{app[:home_dir]}/.ssh"
+  end
+
   # mysql db with user
   mysql_database app[:db_name] do
     connection connection_info
