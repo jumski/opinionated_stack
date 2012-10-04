@@ -26,6 +26,7 @@ nginx[:user] = "deploy"
 
 # sudo
 node['authorization']['sudo']['include_sudoers_d'] = true
+node['authorization']['sudo']['agent_forwarding'] = true
 
 postfix['mydomain'] = node[:akra][:mail_domain]
 postfix['myorigin'] = node[:akra][:mail_domain]
