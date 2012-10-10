@@ -12,15 +12,15 @@ connection_info = {
 akra[:apps].each do |app|
   raise "Application name is required!"        unless app[:name]
   raise "Application main_domain is required!" unless app[:main_domain].size > 0
+  raise "Please provide a password!" unless app[:password]
+  raise "Please provide a db_password!" unless app[:db_password]
 
   # override defaults for app with provided attributes
   app[:home_dir]    ||= "/home/#{app[:name]}"
   app[:username]    ||= app[:name]
   app[:group]       ||= 'deploy'
-  app[:password]    ||= "#{app[:name]}_deploy_password"
   app[:db_username] ||= app[:name]
   app[:db_name]     ||= app[:name]
-  app[:db_password] ||= "#{app[:name]}_mysql_password"
   app[:unicorn_worker_processes] ||= 1
   app[:environment] ||= 'production'
   unicorn_socket_path = "#{app[:home_dir]}/shared/sockets/unicorn.sock"
