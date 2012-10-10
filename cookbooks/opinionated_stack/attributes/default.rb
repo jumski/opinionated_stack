@@ -1,5 +1,6 @@
 include_attribute 'rvm::default'
 include_attribute 'postfix::default'
+include_attribute 'nginx'
 
 default[:opinionated_stack][:packages] = %w{
   libshadow-ruby1.8
