@@ -1,9 +1,11 @@
 {
-  "akra": {
+  "opinionated_stack": {
     "mail_domain" : "beta.turnyourtime.com",
     "apps": [
       {
         "name": "simple_app",
+        "password": "this is unix user password",
+        "db_password": "this is mysql password",
         "main_domain" : "simple_app.net",
         "redirect_domains" : ["www.simple_app.net"],
         "rolling_deploy": false
@@ -11,6 +13,8 @@
 
       {
         "name": "complex_app",
+        "password": "this is unix user password",
+        "db_password": "this is mysql password",
         "main_domain" : "complex_app.pl",
         "redirect_domains": ["www.complex_app.pl"],
         "rolling_deploy": true,
@@ -24,5 +28,5 @@
     ]
   },
 
-  "run_list": [ "akra" ]
+  "run_list": [ "opinionated_stack" ]
 }
