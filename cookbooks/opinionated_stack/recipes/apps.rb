@@ -1,4 +1,4 @@
-akra = node[:akra]
+opinionated_stack = node[:opinionated_stack]
 
 ###########################################
 ############# APPLICATIONS ################
@@ -9,7 +9,7 @@ connection_info = {
   :password => node[:mysql][:server_root_password]
 }
 
-akra[:apps].each do |app|
+opinionated_stack[:apps].each do |app|
   raise "Application name is required!"        unless app[:name]
   raise "Application main_domain is required!" unless app[:main_domain].size > 0
   raise "Please provide a password!" unless app[:password]
@@ -131,7 +131,7 @@ akra[:apps].each do |app|
     template_variables = {
       :root                => app[:home_dir],
       :name                => app[:name],
-      :bundler_bin_path    => akra[:bundler_bin_path],
+      :bundler_bin_path    => opinionated_stack[:bundler_bin_path],
       :unicorn_config_path => unicorn_config_path,
       :environment         => app[:environment]
     }
@@ -180,7 +180,7 @@ akra[:apps].each do |app|
       nopasswd true
     end
 
-    unicorn_command = "#{akra[:bundler_bin_path]} exec unicorn_rails -c #{unicorn_config_path} -E #{app[:environment]}"
+    unicorn_command = "#{opinionated_stack[:bundler_bin_path]} exec unicorn_rails -c #{unicorn_config_path} -E #{app[:environment]}"
     supervisor_service "#{app[:name]}_unicorn" do
       action :enable
       command unicorn_command
@@ -202,7 +202,7 @@ akra[:apps].each do |app|
 
       supervisor_service worker_service_name do
         action :enable
-        command "#{akra[:bundler_bin_path]} exec rake resque:work RAILS_ENV=production VERBOSE=1 QUEUE=#{queue}"
+        command "#{opinionated_stack[:bundler_bin_path]} exec rake resque:work RAILS_ENV=production VERBOSE=1 QUEUE=#{queue}"
 
         autostart true
         autorestart true

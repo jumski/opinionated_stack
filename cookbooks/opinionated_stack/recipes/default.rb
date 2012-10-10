@@ -9,7 +9,7 @@ include_recipe "sudo"
 include_recipe "logrotate"
 include_recipe "postfix"
 
-include_recipe "akra::server"
-include_recipe "akra::apps"
+include_recipe "opinionated_stack::server"
+include_recipe "opinionated_stack::apps"
 
 

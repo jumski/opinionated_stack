@@ -1,7 +1,7 @@
 
-akra = node[:akra]
+opinionated_stack = node[:opinionated_stack]
 
-akra[:packages].each { |name| package name }
+opinionated_stack[:packages].each { |name| package name }
 
 group "deploy" do
   gid 2001
@@ -18,7 +18,7 @@ directory "/etc/supervisor.d" do
   mode "0770"
 end
 
-rvm_wrapper akra[:rvm_wrapper_prefix] do
+rvm_wrapper opinionated_stack[:rvm_wrapper_prefix] do
   ruby_string "default@global"
   binary "bundle"
 end
