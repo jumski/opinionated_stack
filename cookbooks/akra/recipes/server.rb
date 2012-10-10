@@ -30,3 +30,11 @@ logrotate_app "redis" do
   create "644 root adm"
   rotate 7
 end
+
+# nginx site config
+template "/usr/bin/xvfb-wkhtmltopdf" do
+  source "xvfb-wkhtmltopdf"
+  mode '0755'
+  owner "root"
+  group "root"
+end
