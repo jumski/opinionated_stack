@@ -13,6 +13,7 @@ default[:akra][:packages] = %w{
   htop
   tig
   wkhtmltopdf
+  git-core
 }
 default[:akra][:rvm_wrapper_prefix] = 'sys'
 default[:akra][:bundler_bin_path]   = "/usr/local/rvm/bin/sys_bundle"
