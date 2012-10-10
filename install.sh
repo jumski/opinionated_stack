@@ -17,7 +17,7 @@ if ! which chef-solo; then
 fi
 
 mkdir -p /var/chef-solo
-git clone git@github.com:AkraPolska/chef-repo.git /var/chef-solo/chef-repo
+git clone git@github.com:jumski/opinionated_stack.git /var/chef-solo/chef-repo
 ln -s --force /var/chef-solo/chef-repo /root/chef-repo
 pushd /var/chef-solo/chef-repo
 git submodule update --init
