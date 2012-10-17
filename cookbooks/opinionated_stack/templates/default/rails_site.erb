@@ -13,6 +13,12 @@ server {
 
   root <%= @root %>;
 
+  <% if @httpasswd_path %>
+  # basic auth for domain
+  auth_basic "Restricted Access";
+  auth_basic_user_file <%= @httpasswd_path %>;
+  <% end %>
+
   <% # serve assets from public/assets subdirectory
      # only if we do not use asset_domain
      # and we do not want to serve static assets throught rails

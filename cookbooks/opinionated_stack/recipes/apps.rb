@@ -73,21 +73,28 @@ opinionated_stack[:apps].each do |app|
     action :grant
   end
 
-  # nginx site config
+  #####################
+  # nginx site config #
+  #####################
+  nginx_vars = {
+    :main_domain      => app[:main_domain],
+    :redirect_domains => app[:redirect_domains],
+    :name             => app[:name],
+    :socket_path      => unicorn_socket_path,
+    :root             => "#{app[:home_dir]}/current",
+    :asset_domain     => app[:asset_domain],
+    :rails_serves_assets => app[:rails_serves_assets]
+  }
+
+  if app[:http_auth_for]
+    nginx_vars[:httpasswd_path] = opinionated_stack[:httpasswd][:path]
+  end
   template "/etc/nginx/sites-available/#{app[:name]}" do
     source "rails_site.erb"
     mode '0700'
     owner "root"
     group "root"
-    variables(
-      :main_domain      => app[:main_domain],
-      :redirect_domains => app[:redirect_domains],
-      :name             => app[:name],
-      :socket_path      => unicorn_socket_path,
-      :root             => "#{app[:home_dir]}/current",
-      :asset_domain     => app[:asset_domain],
-      :rails_serves_assets => app[:rails_serves_assets]
-    )
+    variables(nginx_vars)
     notifies :reload, "service[nginx]"
   end
 
