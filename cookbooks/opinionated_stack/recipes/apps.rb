@@ -25,6 +25,18 @@ opinionated_stack[:apps].each do |app|
   app[:environment] ||= 'production'
   unicorn_socket_path = "#{app[:home_dir]}/shared/sockets/unicorn.sock"
 
+  # http basic auth - check for usernames not included in httpasswd
+  if app[:http_auth_for]
+    bad_username = app[:http_auth_for].detect do |username|
+      ! opinionated_stack[:httpasswd][:users][username]
+    end
+
+    if bad_username
+      usernames = opinionated_stack[:httpasswd][:users].keys.join(', ')
+      raise "User '#{bad_username}' expected to be present in httpasswd (#{usernames}), but is not."
+    end
+  end
+
   # unix user
   user app[:username] do
     gid "deploy"
