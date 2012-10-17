@@ -1,12 +1,6 @@
 {
   "opinionated_stack": {
     "mail_domain" : "beta.turnyourtime.com",
-    "httpasswd" : {
-      "users" : {
-        "username_1" : "password",
-        "username_2" : "password"
-      }
-    },
     "apps": [
       {
         "name": "simple_app",
@@ -15,7 +9,10 @@
         "main_domain" : "simple_app.net",
         "redirect_domains" : ["www.simple_app.net"],
         "rolling_deploy": false,
-        "http_auth_for" : ["username_1", "username_2"]
+        "http_auth" : {
+          "username_1" : "password",
+          "username_2" : "password"
+        },
       },
 
       {

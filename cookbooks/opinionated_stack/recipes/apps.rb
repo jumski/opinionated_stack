@@ -25,15 +25,21 @@ opinionated_stack[:apps].each do |app|
   app[:environment] ||= 'production'
   unicorn_socket_path = "#{app[:home_dir]}/shared/sockets/unicorn.sock"
 
-  # http basic auth - check for usernames not included in httpasswd
-  if app[:http_auth_for]
-    bad_username = app[:http_auth_for].detect do |username|
-      ! opinionated_stack[:httpasswd][:users][username]
-    end
+  # http basic auth
+  if app[:http_auth]
+    # delete actual file for the first run only
+    current_action = :overwrite
 
-    if bad_username
-      usernames = opinionated_stack[:httpasswd][:users].keys.join(', ')
-      raise "User '#{bad_username}' expected to be present in httpasswd (#{usernames}), but is not."
+    httpasswd_path = "#{app[:home_dir]}/shared/config/httpasswd"
+    app[:http_auth].each_pair do |username, password|
+      htpasswd httpasswd_path do
+        user username
+        password password
+        action action
+      end
+
+      # append rest of the users (do not delete)
+      current_action = :add
     end
   end
 
@@ -86,8 +92,8 @@ opinionated_stack[:apps].each do |app|
     :rails_serves_assets => app[:rails_serves_assets]
   }
 
-  if app[:http_auth_for]
-    nginx_vars[:httpasswd_path] = opinionated_stack[:httpasswd][:path]
+  if app[:http_auth]
+    nginx_vars[:httpasswd_path] = httpasswd_path
   end
   template "/etc/nginx/sites-available/#{app[:name]}" do
     source "rails_site.erb"

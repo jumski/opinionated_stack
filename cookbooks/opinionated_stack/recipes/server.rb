@@ -38,20 +38,3 @@ template "/usr/bin/xvfb-wkhtmltopdf" do
   owner "root"
   group "root"
 end
-
-if opts = node[:opinionated_stack][:httpasswd]
-  opts[:path] ||= "/etc/nginx/htpasswd"
-
-  # delete actual file for the first run only
-  action = :overwrite
-  opts[:users].each_pair do |username, password|
-    htpasswd opts[:path] do
-      user username
-      password password
-      action action
-    end
-
-    # append rest of the users (do not delete)
-    action = :add
-  end
-end
