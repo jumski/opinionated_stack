@@ -16,6 +16,7 @@ default[:opinionated_stack][:packages] = %w{
   wkhtmltopdf
   git-core
   xvfb
+  apt-file
 }
 default[:opinionated_stack][:rvm_wrapper_prefix] = 'sys'
 default[:opinionated_stack][:bundler_bin_path]   = "/usr/local/rvm/bin/sys_bundle"
