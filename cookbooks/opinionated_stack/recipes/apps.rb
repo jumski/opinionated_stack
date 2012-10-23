@@ -56,6 +56,12 @@ opinionated_stack[:apps].each do |app|
     mode '0750'
   end
 
+  bash "disable group write access for home dir" do
+    user "root"
+    code %Q{ chmod -R g-w #{app[:home_dir]} }
+    only_if "test -d #{app[:home_dir]}"
+  end
+
   bash "set permissions for .ssh and its contents" do
     user "root"
     code <<-EOH
