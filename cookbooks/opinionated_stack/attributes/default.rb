@@ -2,7 +2,10 @@ include_attribute 'rvm::default'
 include_attribute 'postfix::default'
 include_attribute 'nginx'
 
-default[:opinionated_stack][:packages] = %w{
+default[:opinionated_stack][:remove_packages] = %w{
+  apache2-mpm-prefork apache2.2-bin apache2-doc apache2.2-common apache2
+}
+default[:opinionated_stack][:install_packages] = %w{
   libshadow-ruby1.8
   imagemagick
   libmagickcore-dev

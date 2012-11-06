@@ -1,7 +1,12 @@
 
 opinionated_stack = node[:opinionated_stack]
 
-opinionated_stack[:packages].each { |name| package name }
+opinionated_stack[:remove_packages].each do |name|
+  package name do
+    action :remove
+  end
+end
+opinionated_stack[:install_packages].each { |name| package name }
 
 group "deploy" do
   gid 2001
