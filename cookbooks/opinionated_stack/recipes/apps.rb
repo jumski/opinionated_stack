@@ -25,6 +25,28 @@ opinionated_stack[:apps].each do |app|
   app[:environment] ||= 'production'
   unicorn_socket_path = "#{app[:home_dir]}/shared/sockets/unicorn.sock"
 
+  # unix user
+  user app[:username] do
+    gid "deploy"
+    home app[:home_dir]
+    shell "/bin/bash"
+    password %x[ openssl passwd -1 #{app[:password]} ].chomp!
+    supports({:manage_home => true})
+  end
+
+  directory app[:home_dir] do
+    mode '0750'
+  end
+
+  %w(bin shared shared/sockets shared/pids shared/log shared/config).each do |path|
+    directory "#{app[:home_dir]}/#{path}" do
+      owner app[:username]
+      group "deploy"
+      mode "0750"
+      recursive true
+    end
+  end
+
   # http basic auth
   if app[:http_auth]
     # delete actual file for the first run only
@@ -108,15 +130,6 @@ opinionated_stack[:apps].each do |app|
     group "root"
     variables(nginx_vars)
     notifies :reload, "service[nginx]"
-  end
-
-  %w(bin shared shared/sockets shared/pids shared/log shared/config).each do |path|
-    directory "#{app[:home_dir]}/#{path}" do
-      owner app[:username]
-      group "deploy"
-      mode "0750"
-      recursive true
-    end
   end
 
   if app[:rolling_deploy]
