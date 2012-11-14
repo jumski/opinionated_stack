@@ -33,4 +33,4 @@ node['authorization']['sudo']['agent_forwarding'] = true
 
 postfix['mydomain'] = node[:opinionated_stack][:mail_domain]
 postfix['myorigin'] = node[:opinionated_stack][:mail_domain]
-postfix['smtp_use_tls'] = true
+postfix['smtp_use_tls'] = "no"
