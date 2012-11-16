@@ -93,6 +93,12 @@ opinionated_stack[:apps].each do |app|
     only_if "test -d #{app[:home_dir]}/.ssh"
   end
 
+  bash "allow group to write to unicorn socket" do
+    user "root"
+    code %Q{ chmod g+w #{unicorn_socket_path} }
+    only_if "test -f #{unicorn_socket_path}"
+  end
+
   # mysql db with user
   mysql_database app[:db_name] do
     connection connection_info
